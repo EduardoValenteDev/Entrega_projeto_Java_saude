@@ -4,31 +4,17 @@ import model.Profissional;
 import model.TelemetriaSinaisVitais;
 import model.UnidadeMovel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final String NOME_ARQUIVO = "dados_sistema.dat";
 
     private static ArrayList<Paciente> pacientes = new ArrayList<>();
     private static ArrayList<UnidadeMovel> unidades = new ArrayList<>();
     private static ArrayList<Profissional> profissionais = new ArrayList<>();
     private static ArrayList<Atendimento> atendimentos = new ArrayList<>();
     private static ArrayList<TelemetriaSinaisVitais> telemetrias = new ArrayList<>();
-
-    private static HashMap<Integer, Paciente> pacientesPorId = new HashMap<>();
-    private static HashMap<Integer, UnidadeMovel> unidadesPorId = new HashMap<>();
-    private static HashMap<Integer, Profissional> profissionaisPorId = new HashMap<>();
-    private static HashMap<Integer, Atendimento> atendimentosPorId = new HashMap<>();
-    private static HashMap<Integer, TelemetriaSinaisVitais> telemetriasPorId = new HashMap<>();
 
     private static int proximoIdPaciente = 1;
     private static int proximoIdUnidade = 1;
@@ -80,12 +66,6 @@ public class Main {
                 case 12:
                     listarSinaisVitais();
                     break;
-                case 13:
-                    salvarDadosEmArquivo();
-                    break;
-                case 14:
-                    carregarDadosDoArquivo();
-                    break;
                 case 0:
                     System.out.println("Sistema encerrado.");
                     break;
@@ -111,8 +91,6 @@ public class Main {
         System.out.println("10. Listar atendimentos");
         System.out.println("11. Registrar sinais vitais");
         System.out.println("12. Listar sinais vitais");
-        System.out.println("13. Salvar dados em arquivo");
-        System.out.println("14. Carregar dados do arquivo");
         System.out.println("0. Sair");
         System.out.println();
     }
@@ -135,7 +113,6 @@ public class Main {
         );
 
         pacientes.add(paciente);
-        pacientesPorId.put(proximoIdPaciente, paciente);
         proximoIdPaciente++;
 
         System.out.println("Paciente cadastrado com sucesso.");
@@ -159,7 +136,7 @@ public class Main {
         System.out.println();
         int id = lerInteiro("Digite o ID do paciente: ");
 
-        Paciente paciente = pacientesPorId.get(id);
+        Paciente paciente = encontrarPacientePorId(id);
 
         if (paciente == null) {
             System.out.println("Paciente não encontrado.");
@@ -172,7 +149,7 @@ public class Main {
         System.out.println();
         int id = lerInteiro("Digite o ID do paciente que deseja atualizar: ");
 
-        Paciente paciente = pacientesPorId.get(id);
+        Paciente paciente = encontrarPacientePorId(id);
 
         if (paciente == null) {
             System.out.println("Paciente não encontrado.");
@@ -221,7 +198,6 @@ public class Main {
         );
 
         unidades.add(unidade);
-        unidadesPorId.put(proximoIdUnidade, unidade);
         proximoIdUnidade++;
 
         System.out.println("Unidade móvel cadastrada com sucesso.");
@@ -257,7 +233,6 @@ public class Main {
         );
 
         profissionais.add(profissional);
-        profissionaisPorId.put(proximoIdProfissional, profissional);
         proximoIdProfissional++;
 
         System.out.println("Profissional cadastrado com sucesso.");
@@ -288,24 +263,27 @@ public class Main {
 
         listarPacientes();
         int idPaciente = lerInteiro("ID do paciente: ");
+        Paciente paciente = encontrarPacientePorId(idPaciente);
 
-        if (!pacientesPorId.containsKey(idPaciente)) {
+        if (paciente == null) {
             System.out.println("Paciente não encontrado.");
             return;
         }
 
         listarUnidadesMoveis();
         int idUnidade = lerInteiro("ID da unidade móvel: ");
+        UnidadeMovel unidade = encontrarUnidadePorId(idUnidade);
 
-        if (!unidadesPorId.containsKey(idUnidade)) {
+        if (unidade == null) {
             System.out.println("Unidade móvel não encontrada.");
             return;
         }
 
         listarProfissionais();
         int idProfissionalLocal = lerInteiro("ID do profissional local: ");
+        Profissional profissionalLocal = encontrarProfissionalPorId(idProfissionalLocal);
 
-        if (!profissionaisPorId.containsKey(idProfissionalLocal)) {
+        if (profissionalLocal == null) {
             System.out.println("Profissional local não encontrado.");
             return;
         }
@@ -314,7 +292,9 @@ public class Main {
         Integer idEspecialistaRemoto = null;
 
         if (idEspecialistaDigitado != 0) {
-            if (!profissionaisPorId.containsKey(idEspecialistaDigitado)) {
+            Profissional especialistaRemoto = encontrarProfissionalPorId(idEspecialistaDigitado);
+
+            if (especialistaRemoto == null) {
                 System.out.println("Especialista remoto não encontrado.");
                 return;
             }
@@ -338,7 +318,6 @@ public class Main {
         );
 
         atendimentos.add(atendimento);
-        atendimentosPorId.put(proximoIdAtendimento, atendimento);
         proximoIdAtendimento++;
 
         System.out.println("Atendimento registrado com sucesso.");
@@ -369,8 +348,9 @@ public class Main {
 
         listarAtendimentos();
         int idAtendimento = lerInteiro("ID do atendimento: ");
+        Atendimento atendimento = encontrarAtendimentoPorId(idAtendimento);
 
-        if (!atendimentosPorId.containsKey(idAtendimento)) {
+        if (atendimento == null) {
             System.out.println("Atendimento não encontrado.");
             return;
         }
@@ -392,7 +372,6 @@ public class Main {
         );
 
         telemetrias.add(telemetria);
-        telemetriasPorId.put(proximoIdTelemetria, telemetria);
         proximoIdTelemetria++;
 
         System.out.println("Sinais vitais registrados com sucesso.");
@@ -412,82 +391,44 @@ public class Main {
         }
     }
 
-    private static void salvarDadosEmArquivo() {
-        try (ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(NOME_ARQUIVO))) {
-            saida.writeObject(pacientes);
-            saida.writeObject(unidades);
-            saida.writeObject(profissionais);
-            saida.writeObject(atendimentos);
-            saida.writeObject(telemetrias);
-
-            saida.writeInt(proximoIdPaciente);
-            saida.writeInt(proximoIdUnidade);
-            saida.writeInt(proximoIdProfissional);
-            saida.writeInt(proximoIdAtendimento);
-            saida.writeInt(proximoIdTelemetria);
-
-            System.out.println("Dados salvos em arquivo com sucesso.");
-        } catch (IOException erro) {
-            System.out.println("Erro ao salvar dados: " + erro.getMessage());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void carregarDadosDoArquivo() {
-        File arquivo = new File(NOME_ARQUIVO);
-
-        if (!arquivo.exists()) {
-            System.out.println("Arquivo de dados ainda não existe.");
-            return;
-        }
-
-        try (ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(NOME_ARQUIVO))) {
-            pacientes = (ArrayList<Paciente>) entrada.readObject();
-            unidades = (ArrayList<UnidadeMovel>) entrada.readObject();
-            profissionais = (ArrayList<Profissional>) entrada.readObject();
-            atendimentos = (ArrayList<Atendimento>) entrada.readObject();
-            telemetrias = (ArrayList<TelemetriaSinaisVitais>) entrada.readObject();
-
-            proximoIdPaciente = entrada.readInt();
-            proximoIdUnidade = entrada.readInt();
-            proximoIdProfissional = entrada.readInt();
-            proximoIdAtendimento = entrada.readInt();
-            proximoIdTelemetria = entrada.readInt();
-
-            recriarMapas();
-
-            System.out.println("Dados carregados do arquivo com sucesso.");
-        } catch (IOException | ClassNotFoundException erro) {
-            System.out.println("Erro ao carregar dados: " + erro.getMessage());
-        }
-    }
-
-    private static void recriarMapas() {
-        pacientesPorId = new HashMap<>();
-        unidadesPorId = new HashMap<>();
-        profissionaisPorId = new HashMap<>();
-        atendimentosPorId = new HashMap<>();
-        telemetriasPorId = new HashMap<>();
-
+    private static Paciente encontrarPacientePorId(int id) {
         for (Paciente paciente : pacientes) {
-            pacientesPorId.put(paciente.getIdPaciente(), paciente);
+            if (paciente.getIdPaciente() == id) {
+                return paciente;
+            }
         }
 
+        return null;
+    }
+
+    private static UnidadeMovel encontrarUnidadePorId(int id) {
         for (UnidadeMovel unidade : unidades) {
-            unidadesPorId.put(unidade.getIdUnidade(), unidade);
+            if (unidade.getIdUnidade() == id) {
+                return unidade;
+            }
         }
 
+        return null;
+    }
+
+    private static Profissional encontrarProfissionalPorId(int id) {
         for (Profissional profissional : profissionais) {
-            profissionaisPorId.put(profissional.getIdProfissional(), profissional);
+            if (profissional.getIdProfissional() == id) {
+                return profissional;
+            }
         }
 
+        return null;
+    }
+
+    private static Atendimento encontrarAtendimentoPorId(int id) {
         for (Atendimento atendimento : atendimentos) {
-            atendimentosPorId.put(atendimento.getIdAtendimento(), atendimento);
+            if (atendimento.getIdAtendimento() == id) {
+                return atendimento;
+            }
         }
 
-        for (TelemetriaSinaisVitais telemetria : telemetrias) {
-            telemetriasPorId.put(telemetria.getIdTelemetria(), telemetria);
-        }
+        return null;
     }
 
     private static String lerTexto(String mensagem) {
