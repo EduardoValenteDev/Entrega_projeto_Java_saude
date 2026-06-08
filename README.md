@@ -18,34 +18,6 @@ Registro e listagem de sinais vitais.
 
 ```mermaid
 classDiagram
-    class Main {
-        - Scanner scanner
-        - ArrayList~Paciente~ pacientes
-        - ArrayList~UnidadeMovel~ unidades
-        - ArrayList~Profissional~ profissionais
-        - ArrayList~Atendimento~ atendimentos
-        - ArrayList~TelemetriaSinaisVitais~ telemetrias
-        - int proximoIdPaciente
-        - int proximoIdUnidade
-        - int proximoIdProfissional
-        - int proximoIdAtendimento
-        - int proximoIdTelemetria
-        + main(String[] args)
-        - exibirMenu()
-        - cadastrarPaciente()
-        - listarPacientes()
-        - buscarPacientePorId()
-        - atualizarPaciente()
-        - cadastrarUnidadeMovel()
-        - listarUnidadesMoveis()
-        - cadastrarProfissional()
-        - listarProfissionais()
-        - registrarAtendimento()
-        - listarAtendimentos()
-        - registrarSinaisVitais()
-        - listarSinaisVitais()
-    }
-
     class Paciente {
         - int idPaciente
         - String nome
@@ -154,12 +126,6 @@ classDiagram
         + setDataHoraLeitura(String)
         + toString() String
     }
-
-    Main --> Paciente : gerencia
-    Main --> UnidadeMovel : gerencia
-    Main --> Profissional : gerencia
-    Main --> Atendimento : gerencia
-    Main --> TelemetriaSinaisVitais : gerencia
 
     Paciente "1" --> "0..*" Atendimento : possui
     UnidadeMovel "1" --> "0..*" Atendimento : realiza
