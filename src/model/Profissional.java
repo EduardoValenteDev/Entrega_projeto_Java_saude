@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class Profissional implements Serializable {
+public class Profissional {
     private int idProfissional;
     private String nome;
     private String registroConselho;
@@ -30,7 +28,6 @@ public class Profissional implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
     public String getRegistroConselho() {
         return registroConselho;

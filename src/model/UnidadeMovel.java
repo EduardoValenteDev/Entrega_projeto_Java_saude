@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class UnidadeMovel implements Serializable {
+public class UnidadeMovel {
     private int idUnidade;
     private String identificacaoSatelite;
     private String regiaoAtual;

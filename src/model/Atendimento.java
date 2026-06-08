@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class Atendimento implements Serializable {
+public class Atendimento {
     private int idAtendimento;
     private int idPaciente;
     private int idUnidade;

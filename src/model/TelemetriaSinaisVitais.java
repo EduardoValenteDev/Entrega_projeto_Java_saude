@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class TelemetriaSinaisVitais implements Serializable {
+public class TelemetriaSinaisVitais {
     private int idTelemetria;
     private int idAtendimento;
     private int frequenciaCardiaca;

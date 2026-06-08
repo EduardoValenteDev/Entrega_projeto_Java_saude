@@ -1,8 +1,6 @@
 package model;
 
-import java.io.Serializable;
-
-public class Paciente implements Serializable {
+public class Paciente {
     private int idPaciente;
     private String nome;
     private String dataNascimento;
@@ -32,7 +30,6 @@ public class Paciente implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
     public String getDataNascimento() {
         return dataNascimento;
