@@ -1,19 +1,19 @@
 package model;
 
 public class TelemetriaSinaisVitais {
-    private int idTelemetria;
-    private int idAtendimento;
+    private String idTelemetria;
+    private Atendimento atendimento;
     private int frequenciaCardiaca;
     private String pressaoArterial;
     private int oxigenacao;
     private double temperatura;
     private String dataHoraLeitura;
 
-    public TelemetriaSinaisVitais(int idTelemetria, int idAtendimento, int frequenciaCardiaca,
+    public TelemetriaSinaisVitais(String idTelemetria, Atendimento atendimento, int frequenciaCardiaca,
                                   String pressaoArterial, int oxigenacao, double temperatura,
                                   String dataHoraLeitura) {
         this.idTelemetria = idTelemetria;
-        this.idAtendimento = idAtendimento;
+        this.atendimento = atendimento;
         this.frequenciaCardiaca = frequenciaCardiaca;
         this.pressaoArterial = pressaoArterial;
         this.oxigenacao = oxigenacao;
@@ -21,20 +21,20 @@ public class TelemetriaSinaisVitais {
         this.dataHoraLeitura = dataHoraLeitura;
     }
 
-    public int getIdTelemetria() {
+    public String getIdTelemetria() {
         return idTelemetria;
     }
 
-    public void setIdTelemetria(int idTelemetria) {
+    public void setIdTelemetria(String idTelemetria) {
         this.idTelemetria = idTelemetria;
     }
 
-    public int getIdAtendimento() {
-        return idAtendimento;
+    public Atendimento getAtendimento() {
+        return atendimento;
     }
 
-    public void setIdAtendimento(int idAtendimento) {
-        this.idAtendimento = idAtendimento;
+    public void setAtendimento(Atendimento atendimento) {
+        this.atendimento = atendimento;
     }
 
     public int getFrequenciaCardiaca() {
@@ -79,14 +79,14 @@ public class TelemetriaSinaisVitais {
 
     @Override
     public String toString() {
-        return "TelemetriaSinaisVitais {" +
-                "idTelemetria=" + idTelemetria +
-                ", idAtendimento=" + idAtendimento +
-                ", frequenciaCardiaca=" + frequenciaCardiaca +
-                ", pressaoArterial='" + pressaoArterial + '\'' +
-                ", oxigenacao=" + oxigenacao +
-                ", temperatura=" + temperatura +
-                ", dataHoraLeitura='" + dataHoraLeitura + '\'' +
-                '}';
+        return "\nSinais Vitais" +
+                "\nID: " + idTelemetria +
+                "\nAtendimento: " + atendimento.getIdAtendimento() +
+                "\nPaciente: " + atendimento.getPaciente().getIdPaciente() + " - " + atendimento.getPaciente().getNome() +
+                "\nFrequência cardíaca: " + frequenciaCardiaca + " bpm" +
+                "\nPressão arterial: " + pressaoArterial +
+                "\nOxigenação: " + oxigenacao + "%" +
+                "\nTemperatura: " + temperatura + "°C" +
+                "\nData e hora da leitura: " + dataHoraLeitura;
     }
 }

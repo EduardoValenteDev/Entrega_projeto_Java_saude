@@ -1,8 +1,12 @@
-﻿# Sistema de Atendimento em Unidades Móveis de Saúde
+﻿# ORBITCARE
+
+Plataforma para atendimento médico remoto em comunidades isoladas.
 
 Projeto Java desenvolvido para simular um sistema de atendimento em saúde utilizando Programação Orientada a Objetos.
 
 ## Funcionalidades
+
+Cadastro e listagem de comunidades.
 
 Cadastro, listagem, busca e atualização de pacientes.
 
@@ -14,38 +18,65 @@ Registro e listagem de atendimentos.
 
 Registro e listagem de sinais vitais.
 
+Geração automática de identificadores para comunidades, pacientes, unidades móveis, profissionais, atendimentos e sinais vitais.
+
+Visualização organizada dos dados no console.
+
 ## Diagrama UML de Classes
 
 ```mermaid
 classDiagram
+    class Comunidade {
+        - String idComunidade
+        - String nome
+        - int populacao
+        - String riscos
+        - double distanciaHospitalar
+        - String conectividade
+        + Comunidade(String, String, int, String, double, String)
+        + getIdComunidade() String
+        + setIdComunidade(String)
+        + getNome() String
+        + setNome(String)
+        + getPopulacao() int
+        + setPopulacao(int)
+        + getRiscos() String
+        + setRiscos(String)
+        + getDistanciaHospitalar() double
+        + setDistanciaHospitalar(double)
+        + getConectividade() String
+        + setConectividade(String)
+        + toString() String
+    }
+
     class Paciente {
-        - int idPaciente
+        - String idPaciente
         - String nome
         - String dataNascimento
-        - String comunidadeOrigem
+        - Comunidade comunidade
         - String historicoMedico
-        + Paciente(int, String, String, String, String)
-        + getIdPaciente() int
-        + setIdPaciente(int)
+        + Paciente(String, String, String, Comunidade, String)
+        + getIdPaciente() String
+        + setIdPaciente(String)
         + getNome() String
         + setNome(String)
         + getDataNascimento() String
         + setDataNascimento(String)
-        + getComunidadeOrigem() String
-        + setComunidadeOrigem(String)
+        + getComunidade() Comunidade
+        + setComunidade(Comunidade)
         + getHistoricoMedico() String
         + setHistoricoMedico(String)
         + toString() String
     }
 
     class UnidadeMovel {
-        - int idUnidade
+        - String idUnidade
         - String identificacaoSatelite
         - String regiaoAtual
         - String statusConexao
-        + UnidadeMovel(int, String, String, String)
-        + getIdUnidade() int
-        + setIdUnidade(int)
+        + UnidadeMovel(String, String, String, String)
+        + getIdUnidade() String
+        + setIdUnidade(String)
         + getIdentificacaoSatelite() String
         + setIdentificacaoSatelite(String)
         + getRegiaoAtual() String
@@ -56,13 +87,13 @@ classDiagram
     }
 
     class Profissional {
-        - int idProfissional
+        - String idProfissional
         - String nome
         - String registroConselho
         - String funcao
-        + Profissional(int, String, String, String)
-        + getIdProfissional() int
-        + setIdProfissional(int)
+        + Profissional(String, String, String, String)
+        + getIdProfissional() String
+        + setIdProfissional(String)
         + getNome() String
         + setNome(String)
         + getRegistroConselho() String
@@ -73,25 +104,25 @@ classDiagram
     }
 
     class Atendimento {
-        - int idAtendimento
-        - int idPaciente
-        - int idUnidade
-        - int idProfissionalLocal
-        - Integer idEspecialistaRemoto
+        - String idAtendimento
+        - Paciente paciente
+        - UnidadeMovel unidade
+        - Profissional profissionalLocal
+        - Profissional especialistaRemoto
         - String dataHoraInicio
         - String resultadoTriagemIa
         - String nivelUrgencia
-        + Atendimento(int, int, int, int, Integer, String, String, String)
-        + getIdAtendimento() int
-        + setIdAtendimento(int)
-        + getIdPaciente() int
-        + setIdPaciente(int)
-        + getIdUnidade() int
-        + setIdUnidade(int)
-        + getIdProfissionalLocal() int
-        + setIdProfissionalLocal(int)
-        + getIdEspecialistaRemoto() Integer
-        + setIdEspecialistaRemoto(Integer)
+        + Atendimento(String, Paciente, UnidadeMovel, Profissional, Profissional, String, String, String)
+        + getIdAtendimento() String
+        + setIdAtendimento(String)
+        + getPaciente() Paciente
+        + setPaciente(Paciente)
+        + getUnidade() UnidadeMovel
+        + setUnidade(UnidadeMovel)
+        + getProfissionalLocal() Profissional
+        + setProfissionalLocal(Profissional)
+        + getEspecialistaRemoto() Profissional
+        + setEspecialistaRemoto(Profissional)
         + getDataHoraInicio() String
         + setDataHoraInicio(String)
         + getResultadoTriagemIa() String
@@ -102,18 +133,18 @@ classDiagram
     }
 
     class TelemetriaSinaisVitais {
-        - int idTelemetria
-        - int idAtendimento
+        - String idTelemetria
+        - Atendimento atendimento
         - int frequenciaCardiaca
         - String pressaoArterial
         - int oxigenacao
         - double temperatura
         - String dataHoraLeitura
-        + TelemetriaSinaisVitais(int, int, int, String, int, double, String)
-        + getIdTelemetria() int
-        + setIdTelemetria(int)
-        + getIdAtendimento() int
-        + setIdAtendimento(int)
+        + TelemetriaSinaisVitais(String, Atendimento, int, String, int, double, String)
+        + getIdTelemetria() String
+        + setIdTelemetria(String)
+        + getAtendimento() Atendimento
+        + setAtendimento(Atendimento)
         + getFrequenciaCardiaca() int
         + setFrequenciaCardiaca(int)
         + getPressaoArterial() String
@@ -127,11 +158,24 @@ classDiagram
         + toString() String
     }
 
-    Paciente "1" --> "0..*" Atendimento : possui
+    Comunidade "1" --> "0..*" Paciente : possui
+    Paciente "1" --> "0..*" Atendimento : participa
     UnidadeMovel "1" --> "0..*" Atendimento : realiza
-    Profissional "1" --> "0..*" Atendimento : participa
+    Profissional "1" --> "0..*" Atendimento : atua
     Atendimento "1" --> "0..*" TelemetriaSinaisVitais : registra
 ```
+
+## Modelo de Orientação a Objetos
+
+O projeto utiliza objetos para representar os relacionamentos entre as classes.
+
+Um paciente possui uma comunidade.
+
+Um atendimento possui um paciente, uma unidade móvel, um profissional local e, opcionalmente, um especialista remoto.
+
+Um registro de sinais vitais possui um atendimento.
+
+Essa estrutura permite que uma classe acesse diretamente as informações relacionadas, sem depender apenas de identificadores soltos.
 
 ## Organização do Projeto
 
@@ -140,6 +184,7 @@ src
   Main.java
   model
     Atendimento.java
+    Comunidade.java
     Paciente.java
     Profissional.java
     TelemetriaSinaisVitais.java

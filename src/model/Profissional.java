@@ -1,23 +1,23 @@
 package model;
 
 public class Profissional {
-    private int idProfissional;
+    private String idProfissional;
     private String nome;
     private String registroConselho;
     private String funcao;
 
-    public Profissional(int idProfissional, String nome, String registroConselho, String funcao) {
+    public Profissional(String idProfissional, String nome, String registroConselho, String funcao) {
         this.idProfissional = idProfissional;
         this.nome = nome;
         this.registroConselho = registroConselho;
         this.funcao = funcao;
     }
 
-    public int getIdProfissional() {
+    public String getIdProfissional() {
         return idProfissional;
     }
 
-    public void setIdProfissional(int idProfissional) {
+    public void setIdProfissional(String idProfissional) {
         this.idProfissional = idProfissional;
     }
 
@@ -28,6 +28,7 @@ public class Profissional {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
 
     public String getRegistroConselho() {
         return registroConselho;
@@ -47,11 +48,10 @@ public class Profissional {
 
     @Override
     public String toString() {
-        return "Profissional {" +
-                "idProfissional=" + idProfissional +
-                ", nome='" + nome + '\'' +
-                ", registroConselho='" + registroConselho + '\'' +
-                ", funcao='" + funcao + '\'' +
-                '}';
+        return "\nProfissional" +
+                "\nID: " + idProfissional +
+                "\nNome: " + nome +
+                "\nRegistro no conselho: " + registroConselho +
+                "\nFunção: " + funcao;
     }
 }

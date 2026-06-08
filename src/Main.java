@@ -1,4 +1,5 @@
 import model.Atendimento;
+import model.Comunidade;
 import model.Paciente;
 import model.Profissional;
 import model.TelemetriaSinaisVitais;
@@ -10,12 +11,14 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static ArrayList<Comunidade> comunidades = new ArrayList<>();
     private static ArrayList<Paciente> pacientes = new ArrayList<>();
     private static ArrayList<UnidadeMovel> unidades = new ArrayList<>();
     private static ArrayList<Profissional> profissionais = new ArrayList<>();
     private static ArrayList<Atendimento> atendimentos = new ArrayList<>();
     private static ArrayList<TelemetriaSinaisVitais> telemetrias = new ArrayList<>();
 
+    private static int proximoIdComunidade = 1;
     private static int proximoIdPaciente = 1;
     private static int proximoIdUnidade = 1;
     private static int proximoIdProfissional = 1;
@@ -31,43 +34,49 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    cadastrarPaciente();
+                    cadastrarComunidade();
                     break;
                 case 2:
-                    listarPacientes();
+                    listarComunidades();
                     break;
                 case 3:
-                    buscarPacientePorId();
+                    cadastrarPaciente();
                     break;
                 case 4:
-                    atualizarPaciente();
+                    listarPacientes();
                     break;
                 case 5:
-                    cadastrarUnidadeMovel();
+                    buscarPacientePorId();
                     break;
                 case 6:
-                    listarUnidadesMoveis();
+                    atualizarPaciente();
                     break;
                 case 7:
-                    cadastrarProfissional();
+                    cadastrarUnidadeMovel();
                     break;
                 case 8:
-                    listarProfissionais();
+                    listarUnidadesMoveis();
                     break;
                 case 9:
-                    registrarAtendimento();
+                    cadastrarProfissional();
                     break;
                 case 10:
-                    listarAtendimentos();
+                    listarProfissionais();
                     break;
                 case 11:
-                    registrarSinaisVitais();
+                    registrarAtendimento();
                     break;
                 case 12:
+                    listarAtendimentos();
+                    break;
+                case 13:
+                    registrarSinaisVitais();
+                    break;
+                case 14:
                     listarSinaisVitais();
                     break;
                 case 0:
-                    System.out.println("Sistema encerrado.");
+                    System.out.println("ORBITCARE encerrado.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -78,49 +87,112 @@ public class Main {
 
     private static void exibirMenu() {
         System.out.println();
-        System.out.println("Sistema de Atendimento em Unidades Móveis de Saúde");
-        System.out.println("1. Cadastrar paciente");
-        System.out.println("2. Listar pacientes");
-        System.out.println("3. Buscar paciente por ID");
-        System.out.println("4. Atualizar paciente");
-        System.out.println("5. Cadastrar unidade móvel");
-        System.out.println("6. Listar unidades móveis");
-        System.out.println("7. Cadastrar profissional");
-        System.out.println("8. Listar profissionais");
-        System.out.println("9. Registrar atendimento");
-        System.out.println("10. Listar atendimentos");
-        System.out.println("11. Registrar sinais vitais");
-        System.out.println("12. Listar sinais vitais");
+        exibirLinha();
+        System.out.println("ORBITCARE");
+        System.out.println("Plataforma para atendimento médico remoto em comunidades isoladas");
+        exibirLinha();
+        System.out.println("1. Cadastrar comunidade");
+        System.out.println("2. Listar comunidades");
+        System.out.println("3. Cadastrar paciente");
+        System.out.println("4. Listar pacientes");
+        System.out.println("5. Buscar paciente por ID");
+        System.out.println("6. Atualizar paciente");
+        System.out.println("7. Cadastrar unidade móvel");
+        System.out.println("8. Listar unidades móveis");
+        System.out.println("9. Cadastrar profissional");
+        System.out.println("10. Listar profissionais");
+        System.out.println("11. Registrar atendimento");
+        System.out.println("12. Listar atendimentos");
+        System.out.println("13. Registrar sinais vitais");
+        System.out.println("14. Listar sinais vitais");
         System.out.println("0. Sair");
+        exibirLinha();
         System.out.println();
     }
 
-    private static void cadastrarPaciente() {
+    private static void cadastrarComunidade() {
+        exibirTituloSecao("CADASTRO DE COMUNIDADE");
+
+        String idComunidade = gerarId("CM", proximoIdComunidade);
+        String nome = lerTexto("Nome da comunidade: ");
+        int populacao = lerInteiro("População: ");
+        String riscos = lerTexto("Riscos da comunidade: ");
+        double distanciaHospitalar = lerDouble("Distância hospitalar em km: ");
+        String conectividade = lerTexto("Conectividade: ");
+
+        Comunidade comunidade = new Comunidade(
+                idComunidade,
+                nome,
+                populacao,
+                riscos,
+                distanciaHospitalar,
+                conectividade
+        );
+
+        comunidades.add(comunidade);
+        proximoIdComunidade++;
+
         System.out.println();
-        System.out.println("Cadastro de paciente");
+        System.out.println("Comunidade cadastrada com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idComunidade);
+    }
+
+    private static void listarComunidades() {
+        exibirTituloSecao("COMUNIDADES ORBITCARE");
+
+        if (comunidades.isEmpty()) {
+            System.out.println("Nenhuma comunidade cadastrada.");
+            return;
+        }
+
+        for (Comunidade comunidade : comunidades) {
+            exibirComunidade(comunidade);
+            exibirLinha();
+        }
+    }
+
+    private static void cadastrarPaciente() {
+        exibirTituloSecao("CADASTRO DE PACIENTE");
+
+        if (comunidades.isEmpty()) {
+            System.out.println("Antes de cadastrar um paciente, cadastre uma comunidade.");
+            return;
+        }
+
+        String idPaciente = gerarId("PT", proximoIdPaciente);
+
+        listarComunidades();
+        String idComunidade = lerTexto("ID da comunidade do paciente: ").toUpperCase();
+
+        Comunidade comunidade = encontrarComunidadePorId(idComunidade);
+
+        if (comunidade == null) {
+            System.out.println("Comunidade não encontrada.");
+            return;
+        }
 
         String nome = lerTexto("Nome: ");
         String dataNascimento = lerTexto("Data de nascimento: ");
-        String comunidadeOrigem = lerTexto("Comunidade de origem: ");
         String historicoMedico = lerTexto("Histórico médico: ");
 
         Paciente paciente = new Paciente(
-                proximoIdPaciente,
+                idPaciente,
                 nome,
                 dataNascimento,
-                comunidadeOrigem,
+                comunidade,
                 historicoMedico
         );
 
         pacientes.add(paciente);
         proximoIdPaciente++;
 
+        System.out.println();
         System.out.println("Paciente cadastrado com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idPaciente);
     }
 
     private static void listarPacientes() {
-        System.out.println();
-        System.out.println("Lista de pacientes");
+        exibirTituloSecao("PACIENTES ORBITCARE");
 
         if (pacientes.isEmpty()) {
             System.out.println("Nenhum paciente cadastrado.");
@@ -129,13 +201,14 @@ public class Main {
 
         for (Paciente paciente : pacientes) {
             System.out.println(paciente);
+            exibirLinha();
         }
     }
 
     private static void buscarPacientePorId() {
-        System.out.println();
-        int id = lerInteiro("Digite o ID do paciente: ");
+        exibirTituloSecao("BUSCA DE PACIENTE");
 
+        String id = lerTexto("Digite o ID do paciente: ").toUpperCase();
         Paciente paciente = encontrarPacientePorId(id);
 
         if (paciente == null) {
@@ -146,9 +219,9 @@ public class Main {
     }
 
     private static void atualizarPaciente() {
-        System.out.println();
-        int id = lerInteiro("Digite o ID do paciente que deseja atualizar: ");
+        exibirTituloSecao("ATUALIZAÇÃO DE PACIENTE");
 
+        String id = lerTexto("Digite o ID do paciente que deseja atualizar: ").toUpperCase();
         Paciente paciente = encontrarPacientePorId(id);
 
         if (paciente == null) {
@@ -160,7 +233,10 @@ public class Main {
 
         String nome = lerTexto("Novo nome: ");
         String dataNascimento = lerTexto("Nova data de nascimento: ");
-        String comunidadeOrigem = lerTexto("Nova comunidade de origem: ");
+
+        listarComunidades();
+        String idComunidade = lerTexto("Novo ID da comunidade: ").toUpperCase();
+
         String historicoMedico = lerTexto("Novo histórico médico: ");
 
         if (!nome.trim().isEmpty()) {
@@ -171,8 +247,14 @@ public class Main {
             paciente.setDataNascimento(dataNascimento);
         }
 
-        if (!comunidadeOrigem.trim().isEmpty()) {
-            paciente.setComunidadeOrigem(comunidadeOrigem);
+        if (!idComunidade.trim().isEmpty()) {
+            Comunidade comunidade = encontrarComunidadePorId(idComunidade);
+
+            if (comunidade == null) {
+                System.out.println("Comunidade não encontrada. A comunidade do paciente não foi alterada.");
+            } else {
+                paciente.setComunidade(comunidade);
+            }
         }
 
         if (!historicoMedico.trim().isEmpty()) {
@@ -183,15 +265,15 @@ public class Main {
     }
 
     private static void cadastrarUnidadeMovel() {
-        System.out.println();
-        System.out.println("Cadastro de unidade móvel");
+        exibirTituloSecao("CADASTRO DE UNIDADE MÓVEL");
 
+        String idUnidade = gerarId("ORB", proximoIdUnidade);
         String identificacaoSatelite = lerTexto("Identificação via satélite: ");
         String regiaoAtual = lerTexto("Região atual: ");
         String statusConexao = lerTexto("Status da conexão: ");
 
         UnidadeMovel unidade = new UnidadeMovel(
-                proximoIdUnidade,
+                idUnidade,
                 identificacaoSatelite,
                 regiaoAtual,
                 statusConexao
@@ -200,12 +282,13 @@ public class Main {
         unidades.add(unidade);
         proximoIdUnidade++;
 
+        System.out.println();
         System.out.println("Unidade móvel cadastrada com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idUnidade);
     }
 
     private static void listarUnidadesMoveis() {
-        System.out.println();
-        System.out.println("Lista de unidades móveis");
+        exibirTituloSecao("UNIDADES MÓVEIS ORBITCARE");
 
         if (unidades.isEmpty()) {
             System.out.println("Nenhuma unidade móvel cadastrada.");
@@ -214,19 +297,20 @@ public class Main {
 
         for (UnidadeMovel unidade : unidades) {
             System.out.println(unidade);
+            exibirLinha();
         }
     }
 
     private static void cadastrarProfissional() {
-        System.out.println();
-        System.out.println("Cadastro de profissional");
+        exibirTituloSecao("CADASTRO DE PROFISSIONAL");
 
+        String idProfissional = gerarId("PR", proximoIdProfissional);
         String nome = lerTexto("Nome: ");
         String registroConselho = lerTexto("Registro no conselho: ");
         String funcao = lerTexto("Função: ");
 
         Profissional profissional = new Profissional(
-                proximoIdProfissional,
+                idProfissional,
                 nome,
                 registroConselho,
                 funcao
@@ -235,12 +319,13 @@ public class Main {
         profissionais.add(profissional);
         proximoIdProfissional++;
 
+        System.out.println();
         System.out.println("Profissional cadastrado com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idProfissional);
     }
 
     private static void listarProfissionais() {
-        System.out.println();
-        System.out.println("Lista de profissionais");
+        exibirTituloSecao("PROFISSIONAIS ORBITCARE");
 
         if (profissionais.isEmpty()) {
             System.out.println("Nenhum profissional cadastrado.");
@@ -249,20 +334,22 @@ public class Main {
 
         for (Profissional profissional : profissionais) {
             System.out.println(profissional);
+            exibirLinha();
         }
     }
 
     private static void registrarAtendimento() {
-        System.out.println();
-        System.out.println("Registro de atendimento");
+        exibirTituloSecao("REGISTRO DE ATENDIMENTO");
 
         if (pacientes.isEmpty() || unidades.isEmpty() || profissionais.isEmpty()) {
             System.out.println("Antes de registrar atendimento, cadastre paciente, unidade móvel e profissional.");
             return;
         }
 
+        String idAtendimento = gerarId("AT", proximoIdAtendimento);
+
         listarPacientes();
-        int idPaciente = lerInteiro("ID do paciente: ");
+        String idPaciente = lerTexto("ID do paciente: ").toUpperCase();
         Paciente paciente = encontrarPacientePorId(idPaciente);
 
         if (paciente == null) {
@@ -271,7 +358,7 @@ public class Main {
         }
 
         listarUnidadesMoveis();
-        int idUnidade = lerInteiro("ID da unidade móvel: ");
+        String idUnidade = lerTexto("ID da unidade móvel: ").toUpperCase();
         UnidadeMovel unidade = encontrarUnidadePorId(idUnidade);
 
         if (unidade == null) {
@@ -280,7 +367,7 @@ public class Main {
         }
 
         listarProfissionais();
-        int idProfissionalLocal = lerInteiro("ID do profissional local: ");
+        String idProfissionalLocal = lerTexto("ID do profissional local: ").toUpperCase();
         Profissional profissionalLocal = encontrarProfissionalPorId(idProfissionalLocal);
 
         if (profissionalLocal == null) {
@@ -288,18 +375,16 @@ public class Main {
             return;
         }
 
-        int idEspecialistaDigitado = lerInteiro("ID do especialista remoto ou 0 se não houver: ");
-        Integer idEspecialistaRemoto = null;
+        String idEspecialistaRemoto = lerTexto("ID do especialista remoto ou 0 se não houver: ").toUpperCase();
+        Profissional especialistaRemoto = null;
 
-        if (idEspecialistaDigitado != 0) {
-            Profissional especialistaRemoto = encontrarProfissionalPorId(idEspecialistaDigitado);
+        if (!idEspecialistaRemoto.equals("0") && !idEspecialistaRemoto.trim().isEmpty()) {
+            especialistaRemoto = encontrarProfissionalPorId(idEspecialistaRemoto);
 
             if (especialistaRemoto == null) {
                 System.out.println("Especialista remoto não encontrado.");
                 return;
             }
-
-            idEspecialistaRemoto = idEspecialistaDigitado;
         }
 
         String dataHoraInicio = lerTexto("Data e hora do início: ");
@@ -307,11 +392,11 @@ public class Main {
         String nivelUrgencia = lerTexto("Nível de urgência: ");
 
         Atendimento atendimento = new Atendimento(
-                proximoIdAtendimento,
-                idPaciente,
-                idUnidade,
-                idProfissionalLocal,
-                idEspecialistaRemoto,
+                idAtendimento,
+                paciente,
+                unidade,
+                profissionalLocal,
+                especialistaRemoto,
                 dataHoraInicio,
                 resultadoTriagemIa,
                 nivelUrgencia
@@ -320,12 +405,13 @@ public class Main {
         atendimentos.add(atendimento);
         proximoIdAtendimento++;
 
+        System.out.println();
         System.out.println("Atendimento registrado com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idAtendimento);
     }
 
     private static void listarAtendimentos() {
-        System.out.println();
-        System.out.println("Lista de atendimentos");
+        exibirTituloSecao("ATENDIMENTOS ORBITCARE");
 
         if (atendimentos.isEmpty()) {
             System.out.println("Nenhum atendimento registrado.");
@@ -334,20 +420,22 @@ public class Main {
 
         for (Atendimento atendimento : atendimentos) {
             System.out.println(atendimento);
+            exibirLinha();
         }
     }
 
     private static void registrarSinaisVitais() {
-        System.out.println();
-        System.out.println("Registro de sinais vitais");
+        exibirTituloSecao("REGISTRO DE SINAIS VITAIS");
 
         if (atendimentos.isEmpty()) {
             System.out.println("Antes de registrar sinais vitais, registre um atendimento.");
             return;
         }
 
+        String idTelemetria = gerarId("SV", proximoIdTelemetria);
+
         listarAtendimentos();
-        int idAtendimento = lerInteiro("ID do atendimento: ");
+        String idAtendimento = lerTexto("ID do atendimento: ").toUpperCase();
         Atendimento atendimento = encontrarAtendimentoPorId(idAtendimento);
 
         if (atendimento == null) {
@@ -362,8 +450,8 @@ public class Main {
         String dataHoraLeitura = lerTexto("Data e hora da leitura: ");
 
         TelemetriaSinaisVitais telemetria = new TelemetriaSinaisVitais(
-                proximoIdTelemetria,
-                idAtendimento,
+                idTelemetria,
+                atendimento,
                 frequenciaCardiaca,
                 pressaoArterial,
                 oxigenacao,
@@ -374,12 +462,13 @@ public class Main {
         telemetrias.add(telemetria);
         proximoIdTelemetria++;
 
+        System.out.println();
         System.out.println("Sinais vitais registrados com sucesso.");
+        System.out.println("ID gerado automaticamente: " + idTelemetria);
     }
 
     private static void listarSinaisVitais() {
-        System.out.println();
-        System.out.println("Lista de sinais vitais");
+        exibirTituloSecao("SINAIS VITAIS ORBITCARE");
 
         if (telemetrias.isEmpty()) {
             System.out.println("Nenhum sinal vital registrado.");
@@ -388,12 +477,23 @@ public class Main {
 
         for (TelemetriaSinaisVitais telemetria : telemetrias) {
             System.out.println(telemetria);
+            exibirLinha();
         }
     }
 
-    private static Paciente encontrarPacientePorId(int id) {
+    private static Comunidade encontrarComunidadePorId(String id) {
+        for (Comunidade comunidade : comunidades) {
+            if (comunidade.getIdComunidade().equalsIgnoreCase(id)) {
+                return comunidade;
+            }
+        }
+
+        return null;
+    }
+
+    private static Paciente encontrarPacientePorId(String id) {
         for (Paciente paciente : pacientes) {
-            if (paciente.getIdPaciente() == id) {
+            if (paciente.getIdPaciente().equalsIgnoreCase(id)) {
                 return paciente;
             }
         }
@@ -401,9 +501,9 @@ public class Main {
         return null;
     }
 
-    private static UnidadeMovel encontrarUnidadePorId(int id) {
+    private static UnidadeMovel encontrarUnidadePorId(String id) {
         for (UnidadeMovel unidade : unidades) {
-            if (unidade.getIdUnidade() == id) {
+            if (unidade.getIdUnidade().equalsIgnoreCase(id)) {
                 return unidade;
             }
         }
@@ -411,9 +511,9 @@ public class Main {
         return null;
     }
 
-    private static Profissional encontrarProfissionalPorId(int id) {
+    private static Profissional encontrarProfissionalPorId(String id) {
         for (Profissional profissional : profissionais) {
-            if (profissional.getIdProfissional() == id) {
+            if (profissional.getIdProfissional().equalsIgnoreCase(id)) {
                 return profissional;
             }
         }
@@ -421,14 +521,39 @@ public class Main {
         return null;
     }
 
-    private static Atendimento encontrarAtendimentoPorId(int id) {
+    private static Atendimento encontrarAtendimentoPorId(String id) {
         for (Atendimento atendimento : atendimentos) {
-            if (atendimento.getIdAtendimento() == id) {
+            if (atendimento.getIdAtendimento().equalsIgnoreCase(id)) {
                 return atendimento;
             }
         }
 
         return null;
+    }
+
+    private static void exibirComunidade(Comunidade comunidade) {
+        System.out.println("\nComunidade");
+        System.out.println("ID: " + comunidade.getIdComunidade());
+        System.out.println("Nome: " + comunidade.getNome());
+        System.out.println("População: " + comunidade.getPopulacao());
+        System.out.println("Riscos: " + comunidade.getRiscos());
+        System.out.println("Distância hospitalar: " + comunidade.getDistanciaHospitalar() + " km");
+        System.out.println("Conectividade: " + comunidade.getConectividade());
+    }
+
+    private static String gerarId(String prefixo, int numero) {
+        return String.format("%s-%02d", prefixo, numero);
+    }
+
+    private static void exibirTituloSecao(String titulo) {
+        System.out.println();
+        exibirLinha();
+        System.out.println(titulo);
+        exibirLinha();
+    }
+
+    private static void exibirLinha() {
+        System.out.println("========================================");
     }
 
     private static String lerTexto(String mensagem) {

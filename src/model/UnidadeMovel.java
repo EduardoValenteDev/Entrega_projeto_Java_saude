@@ -1,23 +1,23 @@
 package model;
 
 public class UnidadeMovel {
-    private int idUnidade;
+    private String idUnidade;
     private String identificacaoSatelite;
     private String regiaoAtual;
     private String statusConexao;
 
-    public UnidadeMovel(int idUnidade, String identificacaoSatelite, String regiaoAtual, String statusConexao) {
+    public UnidadeMovel(String idUnidade, String identificacaoSatelite, String regiaoAtual, String statusConexao) {
         this.idUnidade = idUnidade;
         this.identificacaoSatelite = identificacaoSatelite;
         this.regiaoAtual = regiaoAtual;
         this.statusConexao = statusConexao;
     }
 
-    public int getIdUnidade() {
+    public String getIdUnidade() {
         return idUnidade;
     }
 
-    public void setIdUnidade(int idUnidade) {
+    public void setIdUnidade(String idUnidade) {
         this.idUnidade = idUnidade;
     }
 
@@ -47,11 +47,10 @@ public class UnidadeMovel {
 
     @Override
     public String toString() {
-        return "UnidadeMovel {" +
-                "idUnidade=" + idUnidade +
-                ", identificacaoSatelite='" + identificacaoSatelite + '\'' +
-                ", regiaoAtual='" + regiaoAtual + '\'' +
-                ", statusConexao='" + statusConexao + '\'' +
-                '}';
+        return "\nUnidade Móvel" +
+                "\nID: " + idUnidade +
+                "\nIdentificação via satélite: " + identificacaoSatelite +
+                "\nRegião atual: " + regiaoAtual +
+                "\nStatus da conexão: " + statusConexao;
     }
 }

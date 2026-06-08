@@ -1,66 +1,66 @@
 package model;
 
 public class Atendimento {
-    private int idAtendimento;
-    private int idPaciente;
-    private int idUnidade;
-    private int idProfissionalLocal;
-    private Integer idEspecialistaRemoto;
+    private String idAtendimento;
+    private Paciente paciente;
+    private UnidadeMovel unidade;
+    private Profissional profissionalLocal;
+    private Profissional especialistaRemoto;
     private String dataHoraInicio;
     private String resultadoTriagemIa;
     private String nivelUrgencia;
 
-    public Atendimento(int idAtendimento, int idPaciente, int idUnidade, int idProfissionalLocal,
-                       Integer idEspecialistaRemoto, String dataHoraInicio,
-                       String resultadoTriagemIa, String nivelUrgencia) {
+    public Atendimento(String idAtendimento, Paciente paciente, UnidadeMovel unidade,
+                       Profissional profissionalLocal, Profissional especialistaRemoto,
+                       String dataHoraInicio, String resultadoTriagemIa, String nivelUrgencia) {
         this.idAtendimento = idAtendimento;
-        this.idPaciente = idPaciente;
-        this.idUnidade = idUnidade;
-        this.idProfissionalLocal = idProfissionalLocal;
-        this.idEspecialistaRemoto = idEspecialistaRemoto;
+        this.paciente = paciente;
+        this.unidade = unidade;
+        this.profissionalLocal = profissionalLocal;
+        this.especialistaRemoto = especialistaRemoto;
         this.dataHoraInicio = dataHoraInicio;
         this.resultadoTriagemIa = resultadoTriagemIa;
         this.nivelUrgencia = nivelUrgencia;
     }
 
-    public int getIdAtendimento() {
+    public String getIdAtendimento() {
         return idAtendimento;
     }
 
-    public void setIdAtendimento(int idAtendimento) {
+    public void setIdAtendimento(String idAtendimento) {
         this.idAtendimento = idAtendimento;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+    public Paciente getPaciente() {
+        return paciente;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
     }
 
-    public int getIdUnidade() {
-        return idUnidade;
+    public UnidadeMovel getUnidade() {
+        return unidade;
     }
 
-    public void setIdUnidade(int idUnidade) {
-        this.idUnidade = idUnidade;
+    public void setUnidade(UnidadeMovel unidade) {
+        this.unidade = unidade;
     }
 
-    public int getIdProfissionalLocal() {
-        return idProfissionalLocal;
+    public Profissional getProfissionalLocal() {
+        return profissionalLocal;
     }
 
-    public void setIdProfissionalLocal(int idProfissionalLocal) {
-        this.idProfissionalLocal = idProfissionalLocal;
+    public void setProfissionalLocal(Profissional profissionalLocal) {
+        this.profissionalLocal = profissionalLocal;
     }
 
-    public Integer getIdEspecialistaRemoto() {
-        return idEspecialistaRemoto;
+    public Profissional getEspecialistaRemoto() {
+        return especialistaRemoto;
     }
 
-    public void setIdEspecialistaRemoto(Integer idEspecialistaRemoto) {
-        this.idEspecialistaRemoto = idEspecialistaRemoto;
+    public void setEspecialistaRemoto(Profissional especialistaRemoto) {
+        this.especialistaRemoto = especialistaRemoto;
     }
 
     public String getDataHoraInicio() {
@@ -89,15 +89,23 @@ public class Atendimento {
 
     @Override
     public String toString() {
-        return "Atendimento {" +
-                "idAtendimento=" + idAtendimento +
-                ", idPaciente=" + idPaciente +
-                ", idUnidade=" + idUnidade +
-                ", idProfissionalLocal=" + idProfissionalLocal +
-                ", idEspecialistaRemoto=" + idEspecialistaRemoto +
-                ", dataHoraInicio='" + dataHoraInicio + '\'' +
-                ", resultadoTriagemIa='" + resultadoTriagemIa + '\'' +
-                ", nivelUrgencia='" + nivelUrgencia + '\'' +
-                '}';
+        String especialistaTexto;
+
+        if (especialistaRemoto == null) {
+            especialistaTexto = "Não informado";
+        } else {
+            especialistaTexto = especialistaRemoto.getIdProfissional() + " - " + especialistaRemoto.getNome();
+        }
+
+        return "\nAtendimento" +
+                "\nID: " + idAtendimento +
+                "\nPaciente: " + paciente.getIdPaciente() + " - " + paciente.getNome() +
+                "\nComunidade: " + paciente.getComunidade().getIdComunidade() + " - " + paciente.getComunidade().getNome() +
+                "\nUnidade móvel: " + unidade.getIdUnidade() + " - " + unidade.getIdentificacaoSatelite() +
+                "\nProfissional local: " + profissionalLocal.getIdProfissional() + " - " + profissionalLocal.getNome() +
+                "\nEspecialista remoto: " + especialistaTexto +
+                "\nData e hora do início: " + dataHoraInicio +
+                "\nResultado da triagem por IA: " + resultadoTriagemIa +
+                "\nNível de urgência: " + nivelUrgencia;
     }
 }

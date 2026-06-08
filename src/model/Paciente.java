@@ -1,25 +1,25 @@
 package model;
 
 public class Paciente {
-    private int idPaciente;
+    private String idPaciente;
     private String nome;
     private String dataNascimento;
-    private String comunidadeOrigem;
+    private Comunidade comunidade;
     private String historicoMedico;
 
-    public Paciente(int idPaciente, String nome, String dataNascimento, String comunidadeOrigem, String historicoMedico) {
+    public Paciente(String idPaciente, String nome, String dataNascimento, Comunidade comunidade, String historicoMedico) {
         this.idPaciente = idPaciente;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
-        this.comunidadeOrigem = comunidadeOrigem;
+        this.comunidade = comunidade;
         this.historicoMedico = historicoMedico;
     }
 
-    public int getIdPaciente() {
+    public String getIdPaciente() {
         return idPaciente;
     }
 
-    public void setIdPaciente(int idPaciente) {
+    public void setIdPaciente(String idPaciente) {
         this.idPaciente = idPaciente;
     }
 
@@ -39,12 +39,12 @@ public class Paciente {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getComunidadeOrigem() {
-        return comunidadeOrigem;
+    public Comunidade getComunidade() {
+        return comunidade;
     }
 
-    public void setComunidadeOrigem(String comunidadeOrigem) {
-        this.comunidadeOrigem = comunidadeOrigem;
+    public void setComunidade(Comunidade comunidade) {
+        this.comunidade = comunidade;
     }
 
     public String getHistoricoMedico() {
@@ -57,12 +57,11 @@ public class Paciente {
 
     @Override
     public String toString() {
-        return "Paciente {" +
-                "idPaciente=" + idPaciente +
-                ", nome='" + nome + '\'' +
-                ", dataNascimento='" + dataNascimento + '\'' +
-                ", comunidadeOrigem='" + comunidadeOrigem + '\'' +
-                ", historicoMedico='" + historicoMedico + '\'' +
-                '}';
+        return "\nPaciente" +
+                "\nID: " + idPaciente +
+                "\nNome: " + nome +
+                "\nData de nascimento: " + dataNascimento +
+                "\nComunidade: " + comunidade.getIdComunidade() + " - " + comunidade.getNome() +
+                "\nHistórico médico: " + historicoMedico;
     }
 }
